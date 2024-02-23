@@ -24,9 +24,8 @@ export default function SignUp() {
     router.push(routes.signup);
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: any) => {
     e.preventDefault();
-    console.log("Submitting", name, email, password);
 
     let error = false;
 
