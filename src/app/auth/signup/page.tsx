@@ -1,11 +1,11 @@
 "use client";
-import { CssBaseline, FormControl, ThemeProvider } from "@mui/material";
+import { CssBaseline, ThemeProvider } from "@mui/material";
 import { ColoredTextField } from "@/components/ColoredTextField";
 import { darkTheme } from "@/components/Theme";
 import { useState } from "react";
 import "../auth.css";
 import { AuthButton } from "@/components/AuthComponents";
-import { Account } from "@/data-access";
+import AccountDal from "@/data-access/account";
 import { useRouter } from "next/navigation";
 import routes from "@/utils/routes";
 
@@ -56,7 +56,7 @@ export default function SignUp() {
 
     if (!error) {
       const userCredential =
-        await Account.prototype.createUserWithEmailPassword(
+        await AccountDal.prototype.createUserWithEmailPassword(
           name,
           email,
           password

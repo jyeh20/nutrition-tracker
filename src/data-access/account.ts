@@ -6,8 +6,8 @@ import {
 } from "firebase/auth";
 import { auth, db } from "@/firebase";
 
-export class Account {
-  generateEmptyAccount(name: string, id: string): AccountDescription {
+class AccountDal {
+  private generateEmptyAccount(name: string, id: string): AccountDescription {
     const emptyCalorie: CalorieTracker = {
       date: new Date(Date.now()),
       totalCalories: 0,
@@ -55,3 +55,5 @@ export class Account {
     return userCredential.user;
   }
 }
+
+export default AccountDal;

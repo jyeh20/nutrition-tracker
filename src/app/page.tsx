@@ -13,6 +13,7 @@ import routes from "@/utils/routes";
 export default function Home() {
   const router = useRouter();
   const [user, setUser] = useState({});
+  const [userInfo, setUserInfo] = useState({});
 
   const goSignIn = () => {
     router.push(routes.signin);
@@ -28,7 +29,6 @@ export default function Home() {
     });
   }, []);
 
-  console.log(user);
   return (
     <ThemeProvider theme={darkTheme}>
       <CssBaseline />
