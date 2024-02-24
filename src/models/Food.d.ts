@@ -9,8 +9,8 @@ type CalorieTracker = {
 
 type FoodItem = {
   name: string;
-  brand?: string;
-  tags?: Set<string>;
+  brand: string;
+  tags?: Array<string>;
   nutrition: NutritionInfo;
 };
 
