@@ -29,6 +29,7 @@ export default function SignUp() {
   };
 
   const handleSubmit = async (e: any) => {
+    console.log("Signing in");
     e.preventDefault();
 
     let error = false;
@@ -50,6 +51,7 @@ export default function SignUp() {
 
     if (!error) {
       try {
+        console.log(`Logging in user with email ${email}`);
         const userCredential =
           await FirebaseDal.prototype.signInUserWithEmailPassword(
             email,
@@ -68,7 +70,7 @@ export default function SignUp() {
     <ThemeProvider theme={darkTheme}>
       <CssBaseline />
       <Box sx={styles.root}>
-        <FormControl sx={styles.authFormControl} onSubmit={handleSubmit}>
+        <form style={styles.authFormControl} onSubmit={handleSubmit}>
           <h2 style={styles.authHeader}>Sign In</h2>
           <ColoredTextField
             id="sign-up-email"
@@ -92,10 +94,14 @@ export default function SignUp() {
             error={passwordError}
           />
 
-          <NutritionButton type="submit" sx={styles.NutritionButton}>
+          <NutritionButton
+            type="submit"
+            sx={styles.NutritionButton}
+            onClick={handleSubmit}
+          >
             Submit
           </NutritionButton>
-        </FormControl>
+        </form>
         <NutritionButton sx={styles.NutritionButton} onClick={goSignUp}>
           Sign Up
         </NutritionButton>
