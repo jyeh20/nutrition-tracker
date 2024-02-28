@@ -3,6 +3,7 @@ import { Theme } from "@mui/material/styles";
 const useMealStyles = (theme: Theme) => ({
   root: {
     minHeight: "100vh",
+    backgroundColor: "rgb(10,10,10)",
   },
 
   foodTitle: {
