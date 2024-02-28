@@ -1,5 +1,4 @@
-type AccountDescription = {
+type AccountModel = {
   name: string;
   id: string;
-  calories: Array<CalorieTracker>;
 };

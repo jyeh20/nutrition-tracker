@@ -1,24 +1,41 @@
+import { Timestamp } from "firebase/firestore";
+
+type CalorieTrackerFromDatabase = {
+  calorieList: DbCalorieTracker[];
+};
+
+type DbCalorieTracker = {
+  date: Timestamp;
+  totalCalories: number;
+  totalFats: number;
+  totalCarbs: number;
+  totalProtein: number;
+  foods: Array<string>;
+};
+
 type CalorieTracker = {
   date: Date;
   totalCalories: number;
   totalFats: number;
   totalCarbs: number;
   totalProtein: number;
-  foods: Array<FoodItem>;
+  foods: Array<string>;
 };
 
 type FoodItem = {
   name: string;
-  brand: string;
-  tags?: Array<string>;
   nutrition: NutritionInfo;
 };
 
 type NutritionInfo = {
-  servingSize: number;
   calories: number;
   fat: number;
   carbs: number;
   protein: number;
-  other: Map<string, number>;
+  servingSize?: number;
+  mostCalsFromProtein?: boolean;
+  calsPerHundredGrams?: number;
+  fatPerHundredGrams?: number;
+  carbsPerHundredGrams?: number;
+  proteinPerHundredGrams?: number;
 };

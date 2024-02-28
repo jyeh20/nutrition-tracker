@@ -1,13 +1,15 @@
 "use client";
-import { CssBaseline, ThemeProvider } from "@mui/material";
+import { ThemeProvider } from "@mui/material";
+import CssBaseline from "@mui/material/CssBaseline";
+import Box from "@mui/material/Box";
 import { ColoredTextField } from "@/components/ColoredTextField";
 import { darkTheme } from "@/components/Theme";
 import { useState } from "react";
-import "../auth.css";
-import { AuthButton } from "@/components/AuthComponents";
-import AccountDal from "@/data-access/account";
+import { NutritionButton } from "@/components/Components";
+import FirebaseDal from "@/data-access/firebaseInterface";
 import { useRouter } from "next/navigation";
 import routes from "@/utils/routes";
+import useAuthStyles from "../style";
 
 export default function SignUp() {
   const router = useRouter();
@@ -17,13 +19,14 @@ export default function SignUp() {
   const [nameError, setNameError] = useState(false);
   const [emailError, setEmailError] = useState(false);
   const [passwordError, setPasswordError] = useState(false);
+  const styles = useAuthStyles(darkTheme);
 
   const routeHome = () => {
-    router.push(routes.home);
+    router.replace(routes.home);
   };
 
   const goSignIn = () => {
-    router.push(routes.signin);
+    router.replace(routes.signin);
   };
 
   const handleSubmit = async (e: any) => {
@@ -56,7 +59,7 @@ export default function SignUp() {
 
     if (!error) {
       const userCredential =
-        await AccountDal.prototype.createUserWithEmailPassword(
+        await FirebaseDal.prototype.createUserWithEmailPassword(
           name,
           email,
           password
@@ -72,46 +75,48 @@ export default function SignUp() {
   return (
     <ThemeProvider theme={darkTheme}>
       <CssBaseline />
-      <form className="auth-form-control" onSubmit={handleSubmit}>
-        <h2 className="auth-header">Sign Up</h2>
-        <ColoredTextField
-          id="sign-up-name"
-          required
-          label="Name"
-          variant="outlined"
-          focused
-          className="auth-text-field"
-          onChange={(e) => setName(e.target.value)}
-          error={nameError}
-        />
-        <ColoredTextField
-          id="sign-up-email"
-          required
-          label="Email"
-          variant="outlined"
-          focused
-          className="auth-text-field"
-          onChange={(e) => setEmail(e.target.value)}
-          error={emailError}
-        />
-        <ColoredTextField
-          id="sign-up-password"
-          type="password"
-          required
-          label="Password"
-          variant="outlined"
-          focused
-          className="auth-text-field"
-          onChange={(e) => setPassword(e.target.value)}
-          error={passwordError}
-        />
-        <AuthButton type="submit" className="auth-button">
-          Submit
-        </AuthButton>
-        <AuthButton className="auth-button" onClick={goSignIn}>
-          Sign in
-        </AuthButton>
-      </form>
+      <Box sx={styles.root}>
+        <form style={styles.authFormControl} onSubmit={handleSubmit}>
+          <h2 style={styles.authHeader}>Sign Up</h2>
+          <ColoredTextField
+            id="sign-up-name"
+            required
+            label="Name"
+            variant="outlined"
+            focused
+            style={styles.authTextField}
+            onChange={(e) => setName(e.target.value)}
+            error={nameError}
+          />
+          <ColoredTextField
+            id="sign-up-email"
+            required
+            label="Email"
+            variant="outlined"
+            focused
+            style={styles.authTextField}
+            onChange={(e) => setEmail(e.target.value)}
+            error={emailError}
+          />
+          <ColoredTextField
+            id="sign-up-password"
+            type="password"
+            required
+            label="Password"
+            variant="outlined"
+            focused
+            style={styles.authTextField}
+            onChange={(e) => setPassword(e.target.value)}
+            error={passwordError}
+          />
+          <NutritionButton type="submit" style={styles.NutritionButton}>
+            Submit
+          </NutritionButton>
+          <NutritionButton style={styles.NutritionButton} onClick={goSignIn}>
+            Sign in
+          </NutritionButton>
+        </form>
+      </Box>
     </ThemeProvider>
   );
 }
