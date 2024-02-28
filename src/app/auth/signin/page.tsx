@@ -1,6 +1,5 @@
 "use client";
 import { ThemeProvider } from "@mui/material";
-import FormControl from "@mui/material/FormControl";
 import Box from "@mui/material/Box";
 import CssBaseline from "@mui/material/CssBaseline";
 import { ColoredTextField } from "@/components/ColoredTextField";
@@ -94,11 +93,7 @@ export default function SignUp() {
             error={passwordError}
           />
 
-          <NutritionButton
-            type="submit"
-            sx={styles.NutritionButton}
-            onClick={handleSubmit}
-          >
+          <NutritionButton type="submit" sx={styles.NutritionButton}>
             Submit
           </NutritionButton>
         </form>
