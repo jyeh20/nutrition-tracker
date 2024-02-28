@@ -1,13 +1,16 @@
 "use client";
-import { CssBaseline, ThemeProvider } from "@mui/material";
+import { ThemeProvider } from "@mui/material";
+import FormControl from "@mui/material/FormControl";
+import Box from "@mui/material/Box";
+import CssBaseline from "@mui/material/CssBaseline";
 import { ColoredTextField } from "@/components/ColoredTextField";
 import { darkTheme } from "@/components/Theme";
 import { useState } from "react";
-import "../auth.css";
-import { AuthButton } from "@/components/AuthComponents";
-import AccountDal from "@/data-access/account";
+import { NutritionButton } from "@/components/Components";
+import FirebaseDal from "@/data-access/firebaseInterface";
 import { useRouter } from "next/navigation";
 import routes from "@/utils/routes";
+import useAuthStyles from "../style";
 
 export default function SignUp() {
   const router = useRouter();
@@ -15,13 +18,14 @@ export default function SignUp() {
   const [password, setPassword] = useState("");
   const [emailError, setEmailError] = useState(false);
   const [passwordError, setPasswordError] = useState(false);
+  const styles = useAuthStyles(darkTheme);
 
   const routeHome = () => {
-    router.push(routes.home);
+    router.replace(routes.home);
   };
 
   const goSignUp = () => {
-    router.push(routes.signup);
+    router.replace(routes.signup);
   };
 
   const handleSubmit = async (e: any) => {
@@ -47,7 +51,7 @@ export default function SignUp() {
     if (!error) {
       try {
         const userCredential =
-          await AccountDal.prototype.signInUserWithEmailPassword(
+          await FirebaseDal.prototype.signInUserWithEmailPassword(
             email,
             password
           );
@@ -63,36 +67,39 @@ export default function SignUp() {
   return (
     <ThemeProvider theme={darkTheme}>
       <CssBaseline />
-      <form className="auth-form-control" onSubmit={handleSubmit}>
-        <h2 className="auth-header">Sign In</h2>
-        <ColoredTextField
-          id="sign-up-email"
-          required
-          label="Email"
-          variant="outlined"
-          focused
-          className="auth-text-field"
-          onChange={(e) => setEmail(e.target.value)}
-          error={emailError}
-        />
-        <ColoredTextField
-          id="sign-up-password"
-          type="password"
-          required
-          label="Password"
-          variant="outlined"
-          focused
-          className="auth-text-field"
-          onChange={(e) => setPassword(e.target.value)}
-          error={passwordError}
-        />
-        <AuthButton type="submit" className="auth-button">
-          Submit
-        </AuthButton>
-        <AuthButton className="auth-button" onClick={goSignUp}>
+      <Box sx={styles.root}>
+        <FormControl sx={styles.authFormControl} onSubmit={handleSubmit}>
+          <h2 style={styles.authHeader}>Sign In</h2>
+          <ColoredTextField
+            id="sign-up-email"
+            required
+            label="Email"
+            variant="outlined"
+            focused
+            sx={styles.authTextField}
+            onChange={(e) => setEmail(e.target.value)}
+            error={emailError}
+          />
+          <ColoredTextField
+            id="sign-up-password"
+            type="password"
+            required
+            label="Password"
+            variant="outlined"
+            focused
+            sx={styles.authTextField}
+            onChange={(e) => setPassword(e.target.value)}
+            error={passwordError}
+          />
+
+          <NutritionButton type="submit" sx={styles.NutritionButton}>
+            Submit
+          </NutritionButton>
+        </FormControl>
+        <NutritionButton sx={styles.NutritionButton} onClick={goSignUp}>
           Sign Up
-        </AuthButton>
-      </form>
+        </NutritionButton>
+      </Box>
     </ThemeProvider>
   );
 }
