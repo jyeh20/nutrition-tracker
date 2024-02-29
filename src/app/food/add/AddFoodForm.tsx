@@ -11,6 +11,7 @@ const AddFoodForm = ({ handleTextUpdate, foodRef }: AddFoodFormProps) => {
     <div>
       <ColoredTextField
         id="food-add-serving-size"
+        type="number"
         required
         defaultValue={0}
         label="Serving Size (g/mL/oz/etc)"
@@ -24,6 +25,7 @@ const AddFoodForm = ({ handleTextUpdate, foodRef }: AddFoodFormProps) => {
       />
       <ColoredTextField
         id="food-add-calories"
+        type="number"
         required
         defaultValue={0}
         label="Calories"
@@ -37,6 +39,7 @@ const AddFoodForm = ({ handleTextUpdate, foodRef }: AddFoodFormProps) => {
       />
       <ColoredTextField
         id="food-add-fat"
+        type="number"
         required
         defaultValue={0}
         label="Fat"
@@ -48,6 +51,7 @@ const AddFoodForm = ({ handleTextUpdate, foodRef }: AddFoodFormProps) => {
       />
       <ColoredTextField
         id="food-add-carbs"
+        type="number"
         required
         defaultValue={0}
         label="Carbs"
@@ -61,6 +65,7 @@ const AddFoodForm = ({ handleTextUpdate, foodRef }: AddFoodFormProps) => {
       />
       <ColoredTextField
         id="food-add-protein"
+        type="number"
         required
         defaultValue={0}
         label="Protein"
