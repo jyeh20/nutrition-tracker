@@ -8,7 +8,7 @@ const useAuthStyles = (theme: Theme) => ({
 
   authFormControl: {
     margin: "0px auto",
-    marginTop: "15vh",
+    paddingTop: "15vh",
     display: "flex",
     flex: "1",
     flexDirection: "column" as "column",
