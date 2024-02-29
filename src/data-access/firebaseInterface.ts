@@ -181,6 +181,7 @@ class FirebaseDal implements DalModel {
   // Food Methods
 
   async addFood(food: FoodItem): Promise<void> {
+    food.name = food.name.toLowerCase();
     const foodDoc = doc(db, tables.foods, food.name);
     const foodDocExists = (await getDoc(foodDoc)).data();
     console.log(foodDocExists);
@@ -220,10 +221,11 @@ class FirebaseDal implements DalModel {
       proteinPerHundredGrams,
     };
 
-    await setDoc(doc(db, tables.foods, `${food.name}`), food.nutrition);
+    return await setDoc(doc(db, tables.foods, `${food.name}`), food.nutrition);
   }
 
   async getFood(foodName: string): Promise<FoodItem | undefined> {
+    foodName = foodName.toLowerCase();
     try {
       const foodRef = doc(db, tables.foods, foodName);
       const foodData = (await getDoc(foodRef)).data();

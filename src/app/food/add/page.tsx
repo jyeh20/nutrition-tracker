@@ -12,8 +12,13 @@ import routes from "@/utils/routes";
 import useFoodStyles from "../style";
 import { auth } from "@/firebase";
 import { FoodItem } from "@/models/Food";
-import { calculateMacroFromNormalizedValue } from "@/utils/utils";
-import { AppProps } from "next/app";
+import {
+  calculateMacroFromNormalizedValue,
+  roundToHundreths,
+} from "@/utils/utils";
+import { DispatchStrings } from "../enums";
+import AddFoodForm from "./AddFoodForm";
+import ConfirmFoodForm from "./ConfirmFoodForm";
 
 const emptyFoodItem: FoodItem = {
   name: "",
@@ -25,14 +30,6 @@ const emptyFoodItem: FoodItem = {
     protein: 0,
   },
 };
-
-enum DISPATCH_STRINGS {
-  servingSize,
-  calorie,
-  fat,
-  carbs,
-  protein,
-}
 
 export default function AddFood() {
   const styles = useFoodStyles(darkTheme);
@@ -48,7 +45,7 @@ export default function AddFood() {
     foodItem: emptyFoodItem,
   });
   const [foodFound, setFoodFound] = useState(false);
-  const [showForm, setShowForm] = useState(false);
+  const [showAddForm, setShowAddForm] = useState(false);
   const [fetchedFoodData, setFetchedFoodData] = useState({});
   const [calories, setCalories] = useState(0);
   const [fat, setFat] = useState(0);
@@ -80,10 +77,11 @@ export default function AddFood() {
 
       if (foodData) {
         setFoodFound(true);
+        setShowAddForm(false);
         setFetchedFoodData(foodData);
         foodRef.current.foodItem = foodData;
       } else {
-        setShowForm(true);
+        setShowAddForm(true);
       }
     } else {
       foodRef.current.nameError = true;
@@ -116,25 +114,25 @@ export default function AddFood() {
     foodRef.current.foodItem.name = name;
   };
 
-  const handleFoodUpdate = (dispatch: DISPATCH_STRINGS, dataString: string) => {
+  const handleFoodUpdate = (dispatch: DispatchStrings, dataString: string) => {
     let data: number = 0;
     try {
       data = Number(dataString);
     } catch (e: any) {
       switch (dispatch) {
-        case DISPATCH_STRINGS.servingSize:
+        case DispatchStrings.servingSize:
           foodRef.current.servingError = true;
           break;
-        case DISPATCH_STRINGS.calorie:
+        case DispatchStrings.calorie:
           foodRef.current.calorieError = true;
           break;
-        case DISPATCH_STRINGS.fat:
+        case DispatchStrings.fat:
           foodRef.current.fatError = true;
           break;
-        case DISPATCH_STRINGS.carbs:
+        case DispatchStrings.carbs:
           foodRef.current.carbError = true;
           break;
-        case DISPATCH_STRINGS.protein:
+        case DispatchStrings.protein:
           foodRef.current.proteinError = true;
           break;
       }
@@ -142,37 +140,37 @@ export default function AddFood() {
     const error = data < 0;
     if (error) {
       switch (dispatch) {
-        case DISPATCH_STRINGS.servingSize:
+        case DispatchStrings.servingSize:
           foodRef.current.servingError = true;
           break;
-        case DISPATCH_STRINGS.calorie:
+        case DispatchStrings.calorie:
           foodRef.current.calorieError = true;
           break;
-        case DISPATCH_STRINGS.fat:
+        case DispatchStrings.fat:
           foodRef.current.fatError = true;
           break;
-        case DISPATCH_STRINGS.carbs:
+        case DispatchStrings.carbs:
           foodRef.current.carbError = true;
           break;
-        case DISPATCH_STRINGS.protein:
+        case DispatchStrings.protein:
           foodRef.current.proteinError = true;
           break;
       }
     }
     switch (dispatch) {
-      case DISPATCH_STRINGS.servingSize:
+      case DispatchStrings.servingSize:
         foodRef.current.foodItem.nutrition.servingSize = data;
         break;
-      case DISPATCH_STRINGS.calorie:
+      case DispatchStrings.calorie:
         foodRef.current.foodItem.nutrition.calories = data;
         break;
-      case DISPATCH_STRINGS.fat:
+      case DispatchStrings.fat:
         foodRef.current.foodItem.nutrition.fat = data;
         break;
-      case DISPATCH_STRINGS.carbs:
+      case DispatchStrings.carbs:
         foodRef.current.foodItem.nutrition.carbs = data;
         break;
-      case DISPATCH_STRINGS.protein:
+      case DispatchStrings.protein:
         foodRef.current.foodItem.nutrition.protein = data;
         break;
     }
@@ -191,7 +189,7 @@ export default function AddFood() {
 
     const getMacroValue = (serving: number, normalizedValue: number) => {
       const macro = calculateMacroFromNormalizedValue(serving, normalizedValue);
-      return Math.round((macro + Number.EPSILON) * 100) / 100;
+      return roundToHundreths(macro);
     };
 
     setCalories(
@@ -219,6 +217,7 @@ export default function AddFood() {
 
     const dalRef = dal as FirebaseDal;
     await dalRef.addFood(foodRef.current.foodItem);
+    handleAddFood();
   };
 
   const handleFoodFormSubmit = async (e: any) => {
@@ -230,98 +229,6 @@ export default function AddFood() {
     } else {
       console.log("calling food");
       await handleAddFood();
-    }
-  };
-
-  const AddFoodForm = () => {
-    return (
-      <div>
-        <ColoredTextField
-          id="food-add-serving-size"
-          required
-          defaultValue={0}
-          label="Serving Size (g/mL/oz/etc)"
-          variant="outlined"
-          focused
-          style={styles.foodTextField}
-          onChange={(e) =>
-            handleFoodUpdate(DISPATCH_STRINGS.servingSize, e.target.value)
-          }
-          error={foodRef.current.servingError}
-        />
-        <ColoredTextField
-          id="food-add-calories"
-          required
-          defaultValue={0}
-          label="Calories"
-          variant="outlined"
-          focused
-          style={styles.foodTextField}
-          onChange={(e) =>
-            handleFoodUpdate(DISPATCH_STRINGS.calorie, e.target.value)
-          }
-          error={foodRef.current.calorieError}
-        />
-        <ColoredTextField
-          id="food-add-fat"
-          required
-          defaultValue={0}
-          label="Fat"
-          variant="outlined"
-          focused
-          style={styles.foodTextField}
-          onChange={(e) =>
-            handleFoodUpdate(DISPATCH_STRINGS.fat, e.target.value)
-          }
-          error={foodRef.current.fatError}
-        />
-        <ColoredTextField
-          id="food-add-carbs"
-          required
-          defaultValue={0}
-          label="Carbs"
-          variant="outlined"
-          focused
-          style={styles.foodTextField}
-          onChange={(e) =>
-            handleFoodUpdate(DISPATCH_STRINGS.carbs, e.target.value)
-          }
-          error={foodRef.current.carbError}
-        />
-        <ColoredTextField
-          id="food-add-protein"
-          required
-          defaultValue={0}
-          label="Protein"
-          variant="outlined"
-          focused
-          style={styles.foodTextField}
-          onChange={(e) =>
-            handleFoodUpdate(DISPATCH_STRINGS.protein, e.target.value)
-          }
-          error={foodRef.current.proteinError}
-        />
-      </div>
-    );
-  };
-
-  const ConfirmFoodForm = () => {
-    if (Object.keys(fetchedFoodData).length === 0) {
-      return <div>Loading</div>;
-    } else {
-      return (
-        <div>
-          <div style={styles.foodMacroInfo}>
-            <h3>Calories: {calories}</h3>
-            <h3>Fat: {fat}</h3>
-            <h3>Carbs: {carbs}</h3>
-            <h3>Protein: {protein}</h3>
-          </div>
-          <NutritionButton sx={styles.foodConfirmButton} type="submit">
-            Confirm?
-          </NutritionButton>
-        </div>
-      );
     }
   };
 
@@ -341,7 +248,14 @@ export default function AddFood() {
             onChange={(e) => handleNameUpdate(e.target.value)}
             error={foodRef.current.nameError}
           />
-          {showForm ? <AddFoodForm /> : <></>}
+          {showAddForm ? (
+            <AddFoodForm
+              handleTextUpdate={handleFoodUpdate}
+              foodRef={foodRef}
+            />
+          ) : (
+            <></>
+          )}
           {foodFound ? (
             <>
               <ColoredTextField
@@ -354,7 +268,10 @@ export default function AddFood() {
                 onChange={(e) => handleServingSizeUpdate(e.target.value)}
                 error={servingSizeError}
               />
-              <ConfirmFoodForm />
+              <ConfirmFoodForm
+                foodData={fetchedFoodData}
+                displayData={{ calories, fat, carbs, protein }}
+              />
             </>
           ) : (
             <></>
@@ -365,7 +282,7 @@ export default function AddFood() {
             ) : (
               <>
                 <NutritionButton type="submit">Search</NutritionButton>
-                {showForm ? (
+                {showAddForm ? (
                   <NutritionButton onClick={handleAddFoodToDb}>
                     Add Food to Database
                   </NutritionButton>

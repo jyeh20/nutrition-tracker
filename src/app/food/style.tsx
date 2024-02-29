@@ -1,13 +1,13 @@
 import { Theme } from "@mui/material/styles";
 
-const useMealStyles = (theme: Theme) => ({
+const useFoodStyles = (theme: Theme) => ({
   root: {
     minHeight: "100vh",
     backgroundColor: "rgb(10,10,10)",
   },
 
   foodTitle: {
-    marginTop: "10vh",
+    paddingTop: "10vh",
     marginBottom: "5vh",
   },
 
@@ -26,7 +26,6 @@ const useMealStyles = (theme: Theme) => ({
 
   foodMacroInfo: {
     paddingTop: "3vh",
-    // spaceBetween: "0.5vh",
   },
 
   foodConfirmButton: {
@@ -34,4 +33,4 @@ const useMealStyles = (theme: Theme) => ({
   },
 });
 
-export default useMealStyles;
+export default useFoodStyles;

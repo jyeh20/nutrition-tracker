@@ -1,4 +1,5 @@
 import { Timestamp } from "firebase/firestore";
+import { MutableRefObject } from "react";
 
 type CalorieTrackerFromDatabase = {
   calorieList: DbCalorieTracker[];
@@ -38,4 +39,27 @@ type NutritionInfo = {
   fatPerHundredGrams?: number;
   carbsPerHundredGrams?: number;
   proteinPerHundredGrams?: number;
+};
+
+// export enum DispatchStrings {
+//   servingSize,
+//   calorie,
+//   fat,
+//   carbs,
+//   protein,
+// }
+
+type AddFoodFormProps = {
+  handleTextUpdate: function;
+  foodRef: MutableRefObject;
+};
+
+type ConfirmFoodFormProps = {
+  foodData: object;
+  displayData: {
+    calories;
+    fat;
+    carbs;
+    protein;
+  };
 };

@@ -12,7 +12,11 @@ import CssBaseline from "@mui/material/CssBaseline";
 import useMainStyles from "./style";
 import { darkTheme } from "@/components/Theme";
 
-import { dbCalorieTrackerToRegularTracker, sameDay } from "@/utils/utils";
+import {
+  dbCalorieTrackerToRegularTracker,
+  roundToHundreths,
+  sameDay,
+} from "@/utils/utils";
 import { NutritionButton } from "@/components/Components";
 
 import { DocumentData, Timestamp } from "firebase/firestore";
@@ -25,15 +29,15 @@ export default function Home() {
   const [calorieInfo, setCalorieInfo] = useState({});
   const styles = useMainStyles(darkTheme);
 
-  const goSignIn = () => {
-    router.push(routes.signin);
-  };
-
   const goAddFood = () => {
     router.push(routes.addFood);
   };
 
   useEffect(() => {
+    const goSignIn = () => {
+      router.push(routes.signin);
+    };
+
     async function updateUser() {
       onAuthStateChanged(auth, async (user) => {
         if (user) {
@@ -48,7 +52,7 @@ export default function Home() {
     }
 
     updateUser();
-  }, []);
+  }, [router]);
 
   const MainDisplay = () => {
     const getCalories = (calorieArray: any[]): CalorieTracker => {
@@ -64,9 +68,9 @@ export default function Home() {
         return latest;
       }
 
-      const dalCast = dal as FirebaseDal;
+      const dalRef = dal as FirebaseDal;
 
-      return dalCast.addCalorieTracker(calorieArray);
+      return dalRef.addCalorieTracker(calorieArray);
     };
 
     if (
@@ -78,20 +82,26 @@ export default function Home() {
       const userDisplayInfo = userInfo as DocumentData;
       const calorieDisplayInfo = calorieInfo as DocumentData;
       const calories = getCalories(calorieDisplayInfo.calorieList);
+      calories.totalCalories = roundToHundreths(calories.totalCalories);
+      calories.totalFats = roundToHundreths(calories.totalFats);
+      calories.totalCarbs = roundToHundreths(calories.totalCarbs);
+      calories.totalProtein = roundToHundreths(calories.totalProtein);
       return (
         <ThemeProvider theme={darkTheme}>
           <CssBaseline />
-          <div style={styles.userInfo}>
-            <h2>Welcome back {userDisplayInfo.name}</h2>
-            <div style={styles.tracker}>
-              <h3>Calories: {calories.totalCalories}</h3>
-              <h3>Total Fat: {calories.totalFats}</h3>
-              <h3>Total Carbs: {calories.totalCarbs}</h3>
-              <h3>Total Protein: {calories.totalProtein}</h3>
+          <div style={styles.root}>
+            <div style={styles.userInfo}>
+              <h2>Welcome back {userDisplayInfo.name}</h2>
+              <div style={styles.tracker}>
+                <h3>Calories: {calories.totalCalories}</h3>
+                <h3>Total Fat: {calories.totalFats}</h3>
+                <h3>Total Carbs: {calories.totalCarbs}</h3>
+                <h3>Total Protein: {calories.totalProtein}</h3>
+              </div>
             </div>
-          </div>
-          <div style={styles.inputs}>
-            <NutritionButton onClick={goAddFood}>Add Food</NutritionButton>
+            <div style={styles.inputs}>
+              <NutritionButton onClick={goAddFood}>Add Food</NutritionButton>
+            </div>
           </div>
         </ThemeProvider>
       );

@@ -2,8 +2,9 @@ import { Theme } from "@mui/material/styles";
 
 const useAuthStyles = (theme: Theme) => ({
   root: {
-    minHeight: "100vh"    backgroundColor: "rgb(10,10,10)",
-,
+    minHeight: "100vh",
+    backgroundColor: "rgb(10,10,10)",
+  },
 
   authFormControl: {
     margin: "0px auto",

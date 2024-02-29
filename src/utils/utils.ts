@@ -38,3 +38,7 @@ export const calculateMacroFromNormalizedValue = (
 ) => {
   return (servingSize * macroPerHundredGrams) / 100;
 };
+
+export const roundToHundreths = (value: number) => {
+  return Math.round((value + Number.EPSILON) * 100) / 100;
+};
