@@ -7,7 +7,7 @@ const useMainStyles = (theme: Theme) => ({
   },
 
   userInfo: {
-    marginTop: "15vh",
+    paddingTop: "15vh",
   },
 
   tracker: {
